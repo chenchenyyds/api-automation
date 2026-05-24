@@ -77,6 +77,10 @@ class Settings(BaseSettings):
     EMAILS_FROM_EMAIL: EmailStr | None = None
     EMAILS_FROM_NAME: str | None = None
 
+    # Webhook URLs
+    FEISHU_WEBHOOK_URL: str | None = None
+    DINGTALK_WEBHOOK_URL: str | None = None
+
     @model_validator(mode="after")
     def _set_default_emails_from(self) -> Self:
         if not self.EMAILS_FROM_NAME:
