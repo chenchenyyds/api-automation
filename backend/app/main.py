@@ -1,10 +1,15 @@
 import sentry_sdk
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.routing import APIRoute
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
+from slowapi.util import get_remote_address
 from starlette.middleware.cors import CORSMiddleware
 
 from app.api.main import api_router
 from app.core.config import settings
+
+limiter = Limiter(key_func=get_remote_address)
 
 
 def custom_generate_unique_id(route: APIRoute) -> str:
@@ -28,6 +33,7 @@ A full-stack API automation platform with webhook integrations, health monitorin
 * **Health / 健康检查** - System health monitoring / 系统健康监控
 * **Users / 用户管理** - User management and authentication / 用户管理和认证
 * **Items / 项目管理** - Sample CRUD items / 示例项目CRUD
+* **API Keys / API密钥** - API key management with rate limiting / API密钥管理与限流
 """,
     openapi_url=f"{settings.API_V1_STR}/openapi.json",
     generate_unique_id_function=custom_generate_unique_id,
@@ -38,6 +44,9 @@ A full-stack API automation platform with webhook integrations, health monitorin
     },
     version="1.0.0",
 )
+
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 # Set all CORS enabled origins
 if settings.all_cors_origins:

@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from app.api.routes import dingtalk, feishu, health, items, login, private, users, utils
+from app.api.routes import api_keys, dingtalk, feishu, health, items, login, private, users, utils
 from app.core.config import settings
 
 api_router = APIRouter()
@@ -11,6 +11,7 @@ api_router.include_router(items.router)
 api_router.include_router(feishu.router)
 api_router.include_router(dingtalk.router)
 api_router.include_router(health.router)
+api_router.include_router(api_keys.router)
 
 
 if settings.ENVIRONMENT == "local":

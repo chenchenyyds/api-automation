@@ -81,6 +81,14 @@ class Settings(BaseSettings):
     FEISHU_WEBHOOK_URL: str | None = None
     DINGTALK_WEBHOOK_URL: str | None = None
 
+    # Celery
+    CELERY_BROKER_URL: str = "redis://localhost:6379/0"
+    CELERY_RESULT_BACKEND: str = "redis://localhost:6379/1"
+
+    # Rate limiting
+    RATE_LIMIT_DEFAULT: str = "100/minute"
+    RATE_LIMIT_API_KEY: str = "1000/minute"
+
     @model_validator(mode="after")
     def _set_default_emails_from(self) -> Self:
         if not self.EMAILS_FROM_NAME:

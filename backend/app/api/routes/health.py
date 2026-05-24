@@ -44,7 +44,7 @@ async def health_check_detailed(session: SessionDep) -> dict[str, Any]:
 
     celery_status = "unknown"
     try:
-        from app.celery_app import celery_app
+        from app.core.celery_app import celery_app
         insp = celery_app.control.inspect()
         stats = insp.stats()
         if stats:
